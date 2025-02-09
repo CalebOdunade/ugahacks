@@ -4,7 +4,19 @@ Simple overview of use/purpose.
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+App Description: AI-Enhanced Playlist Creator
+
+Our AI-Enhanced Playlist Creator app is designed for music enthusiasts who want personalized, intelligent, and seamlessly curated playlists. By combining Spotify's powerful API with generative AI from Cohere, the app offers a unique way to rediscover favorite tracks and explore new music possibilities.
+
+Core Features
+Top Track Analysis:
+The app connects to your Spotify account to retrieve your top-listened tracks based on your listening history. These tracks form the foundation for creating engaging playlists tailored to your tastes.
+
+AI-Generated Playlist Descriptions:
+Using the Cohere AI API, the app crafts creative and engaging descriptions for each playlist, adding a personalized and fun touch to your music collection.
+
+Smart Playlist Generation:
+With a simple button click, the app automatically generates a playlist featuring your favorite songs. Tracks are seamlessly added to your Spotify account for instant listening.
 
 ## Getting Started
 
