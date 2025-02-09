@@ -45,13 +45,14 @@ With a simple button click, the app automatically generates a playlist featuring
    ```bash
    git clone <your-repo-url>
    cd <project-directory>
-```
-code blocks for commands
-```
 Set your environment variables in application.properties:
+```
 spotify.client-id=your-client-id
 spotify.client-secret=your-client-secret
 cohere.api-key=your-cohere-api-key
+```
+
+
 
 java -jar target/your-app-name.jar
 http://localhost:8080
