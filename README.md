@@ -52,12 +52,11 @@ spotify.client-secret=your-client-secret
 cohere.api-key=your-cohere-api-key
 ```
 
-
-
+Run the application:
+```
 java -jar target/your-app-name.jar
+```
 http://localhost:8080
-
-
 
 ## Reflection
 
@@ -65,4 +64,4 @@ Through this project, we honed our skills in Java, JavaScript, and HTML to displ
 
 ## Authors
 
-Asanti Kumera, Caleb Odunade, Jordi Seraphin
+Caleb Odunade, Asanti Kumera,  Jordi Seraphin
