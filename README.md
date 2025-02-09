@@ -34,12 +34,29 @@ With a simple button click, the app automatically generates a playlist featuring
 * Any modifications needed to be made to files/folders
 
 ### Executing program
+## Prerequisites
+- Java 17 or higher
+- Maven (optional)
+- API keys for Spotify and Cohere  
 
-* How to run the program
-* Step-by-step bullets
+## How to Run
+
+1. Clone this repository:
+   ```bash
+   git clone <your-repo-url>
+   cd <project-directory>
 ```
 code blocks for commands
 ```
+Set your environment variables in application.properties:
+spotify.client-id=your-client-id
+spotify.client-secret=your-client-secret
+cohere.api-key=your-cohere-api-key
+
+java -jar target/your-app-name.jar
+http://localhost:8080
+
+
 
 ## Reflection
 
