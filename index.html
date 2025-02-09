@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+    </style>
+    <title>Music Taste Survey</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="question-container">
+        <h1>Tell Us About Your Music Taste!</h1>
+        <form id="music-form">
+            <!-- Question 1 -->
+            <div class="question">
+                <label for="genre">What’s your favorite music genre?</label>
+                <select id="genre" name="genre" required>
+                    <option value="" disabled selected>Select a genre</option>
+                    <option value="pop">Pop</option>
+                    <option value="rock">Rock</option>
+                    <option value="hiphop">Hip-Hop</option>
+                    <option value="classical">Classical</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="electronic">Electronic</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question">
+                <label for="artist">Who is your favorite artist or band?</label>
+                <input 
+                    type="text" 
+                    id="artist" 
+                    name="artist" 
+                    placeholder="Enter an artist or band name" 
+                    required 
+                />
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question">
+                <label for="listening-time">How many hours a day do you listen to music?</label>
+                <input 
+                    type="number" 
+                    id="listening-time" 
+                    name="listening-time" 
+                    placeholder="Enter hours per day" 
+                    required 
+                />
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question">
+                <label for="platform">Which platform do you use the most for music?</label>
+                <select id="platform" name="platform" required>
+                    <option value="" disabled selected>Select a platform</option>
+                    <option value="spotify">Spotify</option>
+                    <option value="applemusic">Apple Music</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="amazonmusic">Amazon Music</option>
+                    <option value="tidal">Tidal</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
