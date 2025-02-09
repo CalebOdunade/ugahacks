@@ -26,15 +26,10 @@ An in-depth paragraph about your project and overview of use.
 code blocks for commands
 ```
 
+## Reflection
+
+Through this project, we honed our skills in Java, JavaScript, and HTML to display a captivating user-friendly interface. While the project was successfully completed, we ran into a few issues like uncertainty of ideas and lack of knowledge of the programs we used. However, this project served as a learning lesson for the three of us because we got to advance our abilities in these areas. Overall, this project helped us improve our efficiency on group coding projects and improved our programming skills.
+
 ## Authors
 
 Asanti Kumera, Caleb Odunade, Jordi Seraphin
-
-## Acknowledgments
-
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
