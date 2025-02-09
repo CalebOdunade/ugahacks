@@ -9,9 +9,11 @@ An in-depth paragraph about your project and overview of use.
 ## Getting Started
 
 ### Dependencies
-
-* Intellij
-* Visual Studio Code
+* springframework
+* se.michaelthelin.spotify
+* com.squareup.okhttp3
+* org.junit.jupiter
+* jakarta.annotation
 
 ### Installing
 
