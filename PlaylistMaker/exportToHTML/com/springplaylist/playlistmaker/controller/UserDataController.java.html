@@ -1,0 +1,182 @@
+<html>
+<head>
+<title>UserDataController.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #7a7e85;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+UserDataController.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">springplaylist</span><span class="s2">.</span><span class="s1">playlistmaker</span><span class="s2">.</span><span class="s1">controller</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">fasterxml</span><span class="s2">.</span><span class="s1">jackson</span><span class="s2">.</span><span class="s1">databind</span><span class="s2">.</span><span class="s1">ObjectMapper</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">beans</span><span class="s2">.</span><span class="s1">factory</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">Value</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">http</span><span class="s2">.</span><span class="s1">ResponseEntity</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">web</span><span class="s2">.</span><span class="s1">bind</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">SpotifyApi</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">exceptions</span><span class="s2">.</span><span class="s1">detailed</span><span class="s2">.</span><span class="s1">BadGatewayException</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">model_objects</span><span class="s2">.</span><span class="s1">specification</span><span class="s2">.</span><span class="s1">Playlist</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">model_objects</span><span class="s2">.</span><span class="s1">specification</span><span class="s2">.</span><span class="s1">Track</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">requests</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">personalization</span><span class="s2">.</span><span class="s1">simplified</span><span class="s2">.</span><span class="s1">GetUsersTopTracksRequest</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">requests</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">playlists</span><span class="s2">.</span><span class="s1">AddItemsToPlaylistRequest</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">requests</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">playlists</span><span class="s2">.</span><span class="s1">CreatePlaylistRequest</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">OutputStream</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">net</span><span class="s2">.</span><span class="s1">HttpURLConnection</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">net</span><span class="s2">.</span><span class="s1">URL</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Map</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Scanner</span><span class="s2">;</span>
+
+<span class="s1">@RestController</span>
+<span class="s0">public class </span><span class="s1">UserDataController </span><span class="s2">{</span>
+
+    <span class="s0">private final </span><span class="s1">AuthController authController</span><span class="s2">;</span>
+    <span class="s0">private final </span><span class="s1">SpotifyApi spotifyApi</span><span class="s2">;</span>
+    <span class="s0">private final </span><span class="s1">String cohereApiKey</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">UserDataController</span><span class="s2">(</span><span class="s1">AuthController authController</span><span class="s2">,</span>
+                              <span class="s1">@Value</span><span class="s2">(</span><span class="s3">&quot;${spotify.client-id}&quot;</span><span class="s2">) </span><span class="s1">String clientId</span><span class="s2">,</span>
+                              <span class="s1">@Value</span><span class="s2">(</span><span class="s3">&quot;${spotify.client-secret}&quot;</span><span class="s2">) </span><span class="s1">String clientSecret</span><span class="s2">,</span>
+                              <span class="s1">@Value</span><span class="s2">(</span><span class="s3">&quot;${cohere.api-key}&quot;</span><span class="s2">) </span><span class="s1">String cohereApiKey</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">authController </span><span class="s2">= </span><span class="s1">authController</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">spotifyApi </span><span class="s2">= </span><span class="s0">new </span><span class="s1">SpotifyApi</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">()</span>
+                <span class="s2">.</span><span class="s1">setClientId</span><span class="s2">(</span><span class="s1">clientId</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">setClientSecret</span><span class="s2">(</span><span class="s1">clientSecret</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">setRedirectUri</span><span class="s2">(</span><span class="s1">authController</span><span class="s2">.</span><span class="s1">getRedirectUri</span><span class="s2">())</span>
+                <span class="s2">.</span><span class="s1">build</span><span class="s2">();</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">cohereApiKey </span><span class="s2">= </span><span class="s1">cohereApiKey</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@GetMapping</span><span class="s2">(</span><span class="s3">&quot;/top-songs-page&quot;</span><span class="s2">)</span>
+    <span class="s0">public </span><span class="s1">ResponseEntity</span><span class="s2">&lt;?&gt; </span><span class="s1">createPlaylist</span><span class="s2">() {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">String accessToken </span><span class="s2">= </span><span class="s1">authController</span><span class="s2">.</span><span class="s1">getAccessToken</span><span class="s2">();</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">accessToken </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">accessToken</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+                <span class="s0">return </span><span class="s1">ResponseEntity</span><span class="s2">.</span><span class="s1">badRequest</span><span class="s2">().</span><span class="s1">body</span><span class="s2">(</span><span class="s3">&quot;Error: No access token. Please log in first.&quot;</span><span class="s2">);</span>
+            <span class="s2">}</span>
+
+            <span class="s1">spotifyApi</span><span class="s2">.</span><span class="s1">setAccessToken</span><span class="s2">(</span><span class="s1">accessToken</span><span class="s2">);</span>
+
+            <span class="s4">// Fetch top tracks</span>
+            <span class="s1">GetUsersTopTracksRequest request </span><span class="s2">= </span><span class="s1">spotifyApi</span><span class="s2">.</span><span class="s1">getUsersTopTracks</span><span class="s2">().</span><span class="s1">build</span><span class="s2">();</span>
+            <span class="s1">Track</span><span class="s2">[] </span><span class="s1">tracks </span><span class="s2">= </span><span class="s1">request</span><span class="s2">.</span><span class="s1">execute</span><span class="s2">().</span><span class="s1">getItems</span><span class="s2">();</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">tracks</span><span class="s2">.</span><span class="s1">length </span><span class="s2">== </span><span class="s5">0</span><span class="s2">) {</span>
+                <span class="s0">return </span><span class="s1">ResponseEntity</span><span class="s2">.</span><span class="s1">ok</span><span class="s2">().</span><span class="s1">body</span><span class="s2">(</span><span class="s1">Map</span><span class="s2">.</span><span class="s1">of</span><span class="s2">(</span><span class="s3">&quot;message&quot;</span><span class="s2">, </span><span class="s3">&quot;No top tracks found.&quot;</span><span class="s2">));</span>
+            <span class="s2">}</span>
+
+            <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">&gt; </span><span class="s1">trackUris </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+            <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">&gt; </span><span class="s1">trackNames </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+
+            <span class="s0">for </span><span class="s2">(</span><span class="s1">Track track </span><span class="s2">: </span><span class="s1">tracks</span><span class="s2">) {</span>
+                <span class="s1">trackUris</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">track</span><span class="s2">.</span><span class="s1">getUri</span><span class="s2">());</span>
+                <span class="s1">trackNames</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">track</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">());</span>
+            <span class="s2">}</span>
+
+            <span class="s1">String userId </span><span class="s2">= </span><span class="s1">spotifyApi</span><span class="s2">.</span><span class="s1">getCurrentUsersProfile</span><span class="s2">().</span><span class="s1">build</span><span class="s2">().</span><span class="s1">execute</span><span class="s2">().</span><span class="s1">getId</span><span class="s2">();</span>
+
+            <span class="s4">// Generate playlist description using Cohere AI</span>
+            <span class="s1">String aiGeneratedDescription </span><span class="s2">= </span><span class="s1">generatePlaylistDescription</span><span class="s2">(</span><span class="s1">trackNames</span><span class="s2">);</span>
+
+            <span class="s4">// Create the playlist</span>
+            <span class="s1">Playlist playlist </span><span class="s2">= </span><span class="s1">createPlaylistWithRetries</span><span class="s2">(</span><span class="s1">userId</span><span class="s2">, </span><span class="s3">&quot;My Top Songs Playlist&quot;</span><span class="s2">, </span><span class="s1">aiGeneratedDescription</span><span class="s2">);</span>
+
+            <span class="s4">// Add tracks to the playlist</span>
+            <span class="s0">int </span><span class="s1">batchSize </span><span class="s2">= </span><span class="s5">100</span><span class="s2">;</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s5">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">trackUris</span><span class="s2">.</span><span class="s1">size</span><span class="s2">(); </span><span class="s1">i </span><span class="s2">+= </span><span class="s1">batchSize</span><span class="s2">) {</span>
+                <span class="s1">String</span><span class="s2">[] </span><span class="s1">batch </span><span class="s2">= </span><span class="s1">trackUris</span><span class="s2">.</span><span class="s1">subList</span><span class="s2">(</span><span class="s1">i</span><span class="s2">, </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">min</span><span class="s2">(</span><span class="s1">i </span><span class="s2">+ </span><span class="s1">batchSize</span><span class="s2">, </span><span class="s1">trackUris</span><span class="s2">.</span><span class="s1">size</span><span class="s2">()))</span>
+                        <span class="s2">.</span><span class="s1">toArray</span><span class="s2">(</span><span class="s0">new </span><span class="s1">String</span><span class="s2">[</span><span class="s5">0</span><span class="s2">]);</span>
+                <span class="s1">AddItemsToPlaylistRequest addItemsRequest </span><span class="s2">= </span><span class="s1">spotifyApi</span>
+                        <span class="s2">.</span><span class="s1">addItemsToPlaylist</span><span class="s2">(</span><span class="s1">playlist</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">batch</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">build</span><span class="s2">();</span>
+                <span class="s1">addItemsRequest</span><span class="s2">.</span><span class="s1">execute</span><span class="s2">();</span>
+            <span class="s2">}</span>
+
+            <span class="s1">String playlistUrl </span><span class="s2">= </span><span class="s1">playlist</span><span class="s2">.</span><span class="s1">getExternalUrls</span><span class="s2">().</span><span class="s1">get</span><span class="s2">(</span><span class="s3">&quot;spotify&quot;</span><span class="s2">);</span>
+
+            <span class="s0">return </span><span class="s1">ResponseEntity</span><span class="s2">.</span><span class="s1">ok</span><span class="s2">(</span><span class="s1">Map</span><span class="s2">.</span><span class="s1">of</span><span class="s2">(</span>
+                    <span class="s3">&quot;playlistUrl&quot;</span><span class="s2">, </span><span class="s1">playlistUrl</span><span class="s2">,</span>
+                    <span class="s3">&quot;trackNames&quot;</span><span class="s2">, </span><span class="s1">trackNames</span><span class="s2">,</span>
+                    <span class="s3">&quot;playlistDescription&quot;</span><span class="s2">, </span><span class="s1">aiGeneratedDescription</span>
+            <span class="s2">));</span>
+
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+            <span class="s1">e</span><span class="s2">.</span><span class="s1">printStackTrace</span><span class="s2">();</span>
+            <span class="s0">return </span><span class="s1">ResponseEntity</span><span class="s2">.</span><span class="s1">status</span><span class="s2">(</span><span class="s5">500</span><span class="s2">).</span><span class="s1">body</span><span class="s2">(</span><span class="s1">Map</span><span class="s2">.</span><span class="s1">of</span><span class="s2">(</span><span class="s3">&quot;error&quot;</span><span class="s2">, </span><span class="s3">&quot;Error creating playlist&quot;</span><span class="s2">, </span><span class="s3">&quot;details&quot;</span><span class="s2">, </span><span class="s1">e</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">()));</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">String generatePlaylistDescription</span><span class="s2">(</span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">&gt; </span><span class="s1">trackNames</span><span class="s2">) {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">String prompt </span><span class="s2">= </span><span class="s3">&quot;Generate a creative playlist description based on these songs: &quot; </span><span class="s2">+ </span><span class="s1">String</span><span class="s2">.</span><span class="s1">join</span><span class="s2">(</span><span class="s3">&quot;, &quot;</span><span class="s2">, </span><span class="s1">trackNames</span><span class="s2">);</span>
+            <span class="s1">String apiUrl </span><span class="s2">= </span><span class="s3">&quot;https://api.cohere.ai/generate&quot;</span><span class="s2">;</span>
+
+            <span class="s1">HttpURLConnection connection </span><span class="s2">= (</span><span class="s1">HttpURLConnection</span><span class="s2">) </span><span class="s0">new </span><span class="s1">URL</span><span class="s2">(</span><span class="s1">apiUrl</span><span class="s2">).</span><span class="s1">openConnection</span><span class="s2">();</span>
+            <span class="s1">connection</span><span class="s2">.</span><span class="s1">setRequestMethod</span><span class="s2">(</span><span class="s3">&quot;POST&quot;</span><span class="s2">);</span>
+            <span class="s1">connection</span><span class="s2">.</span><span class="s1">setRequestProperty</span><span class="s2">(</span><span class="s3">&quot;Authorization&quot;</span><span class="s2">, </span><span class="s3">&quot;Bearer &quot; </span><span class="s2">+ </span><span class="s1">cohereApiKey</span><span class="s2">);</span>
+            <span class="s1">connection</span><span class="s2">.</span><span class="s1">setRequestProperty</span><span class="s2">(</span><span class="s3">&quot;Content-Type&quot;</span><span class="s2">, </span><span class="s3">&quot;application/json&quot;</span><span class="s2">);</span>
+            <span class="s1">connection</span><span class="s2">.</span><span class="s1">setDoOutput</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+            <span class="s4">// Request body for Cohere API</span>
+            <span class="s1">String requestBody </span><span class="s2">= </span><span class="s3">&quot;&quot;&quot; 
+                    { 
+                        &quot;model&quot;: &quot;command-xlarge-nightly&quot;, 
+                        &quot;prompt&quot;: &quot;%s&quot;, 
+                        &quot;max_tokens&quot;: 100, 
+                        &quot;temperature&quot;: 0.8 
+                    } 
+                    &quot;&quot;&quot;</span><span class="s2">.</span><span class="s1">formatted</span><span class="s2">(</span><span class="s1">prompt</span><span class="s2">);</span>
+
+            <span class="s1">connection</span><span class="s2">.</span><span class="s1">getOutputStream</span><span class="s2">().</span><span class="s1">write</span><span class="s2">(</span><span class="s1">requestBody</span><span class="s2">.</span><span class="s1">getBytes</span><span class="s2">());</span>
+
+            <span class="s1">Scanner scanner </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scanner</span><span class="s2">(</span><span class="s1">connection</span><span class="s2">.</span><span class="s1">getInputStream</span><span class="s2">());</span>
+            <span class="s1">StringBuilder response </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StringBuilder</span><span class="s2">();</span>
+            <span class="s0">while </span><span class="s2">(</span><span class="s1">scanner</span><span class="s2">.</span><span class="s1">hasNext</span><span class="s2">()) {</span>
+                <span class="s1">response</span><span class="s2">.</span><span class="s1">append</span><span class="s2">(</span><span class="s1">scanner</span><span class="s2">.</span><span class="s1">nextLine</span><span class="s2">());</span>
+            <span class="s2">}</span>
+            <span class="s1">scanner</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+
+            <span class="s1">Map</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">, </span><span class="s1">Object</span><span class="s2">&gt; </span><span class="s1">jsonResponse </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ObjectMapper</span><span class="s2">().</span><span class="s1">readValue</span><span class="s2">(</span><span class="s1">response</span><span class="s2">.</span><span class="s1">toString</span><span class="s2">(), </span><span class="s1">Map</span><span class="s2">.</span><span class="s0">class</span><span class="s2">);</span>
+            <span class="s0">return </span><span class="s2">((</span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Map</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">, </span><span class="s1">Object</span><span class="s2">&gt;&gt;) </span><span class="s1">jsonResponse</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s3">&quot;generations&quot;</span><span class="s2">))</span>
+                    <span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s5">0</span><span class="s2">).</span><span class="s1">get</span><span class="s2">(</span><span class="s3">&quot;text&quot;</span><span class="s2">).</span><span class="s1">toString</span><span class="s2">().</span><span class="s1">trim</span><span class="s2">();</span>
+
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+            <span class="s0">return </span><span class="s3">&quot;A great collection of top tracks!&quot;</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">Playlist createPlaylistWithRetries</span><span class="s2">(</span><span class="s1">String userId</span><span class="s2">, </span><span class="s1">String playlistName</span><span class="s2">, </span><span class="s1">String description</span><span class="s2">) </span><span class="s0">throws </span><span class="s1">Exception </span><span class="s2">{</span>
+        <span class="s0">int </span><span class="s1">retries </span><span class="s2">= </span><span class="s5">3</span><span class="s2">;</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s5">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">retries</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">try </span><span class="s2">{</span>
+                <span class="s1">CreatePlaylistRequest createPlaylistRequest </span><span class="s2">= </span><span class="s1">spotifyApi</span>
+                        <span class="s2">.</span><span class="s1">createPlaylist</span><span class="s2">(</span><span class="s1">userId</span><span class="s2">, </span><span class="s1">playlistName</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">description</span><span class="s2">(</span><span class="s1">description</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">public_</span><span class="s2">(</span><span class="s0">false</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">build</span><span class="s2">();</span>
+                <span class="s0">return </span><span class="s1">createPlaylistRequest</span><span class="s2">.</span><span class="s1">execute</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">BadGatewayException e</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">i </span><span class="s2">== </span><span class="s1">retries </span><span class="s2">- </span><span class="s5">1</span><span class="s2">) {</span>
+                    <span class="s0">throw </span><span class="s1">e</span><span class="s2">;</span>
+                <span class="s2">}</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s3">&quot;Retrying playlist creation...&quot;</span><span class="s2">);</span>
+                <span class="s1">Thread</span><span class="s2">.</span><span class="s1">sleep</span><span class="s2">(</span><span class="s5">1000</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s3">&quot;Failed to create playlist after retries.&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

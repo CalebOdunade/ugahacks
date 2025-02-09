@@ -1,0 +1,94 @@
+<html>
+<head>
+<title>AuthController.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+AuthController.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">springplaylist</span><span class="s2">.</span><span class="s1">playlistmaker</span><span class="s2">.</span><span class="s1">controller</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">beans</span><span class="s2">.</span><span class="s1">factory</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">Value</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">stereotype</span><span class="s2">.</span><span class="s1">Controller</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">web</span><span class="s2">.</span><span class="s1">bind</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">GetMapping</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">web</span><span class="s2">.</span><span class="s1">bind</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">RequestParam</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">org</span><span class="s2">.</span><span class="s1">springframework</span><span class="s2">.</span><span class="s1">web</span><span class="s2">.</span><span class="s1">servlet</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">RedirectView</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">SpotifyApi</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">SpotifyHttpManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">se</span><span class="s2">.</span><span class="s1">michaelthelin</span><span class="s2">.</span><span class="s1">spotify</span><span class="s2">.</span><span class="s1">model_objects</span><span class="s2">.</span><span class="s1">credentials</span><span class="s2">.</span><span class="s1">AuthorizationCodeCredentials</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">jakarta</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">PostConstruct</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">net</span><span class="s2">.</span><span class="s1">URI</span><span class="s2">;</span>
+
+<span class="s1">@Controller</span>
+<span class="s0">public class </span><span class="s1">AuthController </span><span class="s2">{</span>
+
+    <span class="s1">@Value</span><span class="s2">(</span><span class="s3">&quot;${spotify.client-id}&quot;</span><span class="s2">)</span>
+    <span class="s0">private </span><span class="s1">String clientId</span><span class="s2">;</span>
+
+    <span class="s1">@Value</span><span class="s2">(</span><span class="s3">&quot;${spotify.client-secret}&quot;</span><span class="s2">)</span>
+    <span class="s0">private </span><span class="s1">String clientSecret</span><span class="s2">;</span>
+
+    <span class="s1">@Value</span><span class="s2">(</span><span class="s3">&quot;${spotify.redirect-uri}&quot;</span><span class="s2">)</span>
+    <span class="s0">private </span><span class="s1">String redirectUri</span><span class="s2">; </span><span class="s4">// Store as String first</span>
+
+    <span class="s0">private </span><span class="s1">SpotifyApi spotifyApi</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String accessToken</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">URI redirectUriObject</span><span class="s2">; </span><span class="s4">// Store as URI</span>
+
+    <span class="s1">@PostConstruct</span>
+    <span class="s0">public void </span><span class="s1">init</span><span class="s2">() {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">redirectUriObject </span><span class="s2">= </span><span class="s1">SpotifyHttpManager</span><span class="s2">.</span><span class="s1">makeUri</span><span class="s2">(</span><span class="s1">redirectUri</span><span class="s2">); </span><span class="s4">// Convert String to URI</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">spotifyApi </span><span class="s2">= </span><span class="s0">new </span><span class="s1">SpotifyApi</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">()</span>
+                <span class="s2">.</span><span class="s1">setClientId</span><span class="s2">(</span><span class="s1">clientId</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">setClientSecret</span><span class="s2">(</span><span class="s1">clientSecret</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">setRedirectUri</span><span class="s2">(</span><span class="s1">redirectUriObject</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">build</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@GetMapping</span><span class="s2">(</span><span class="s3">&quot;/&quot;</span><span class="s2">)</span>
+    <span class="s0">public </span><span class="s1">RedirectView login</span><span class="s2">() {</span>
+        <span class="s1">String authorizeURL </span><span class="s2">= </span><span class="s1">spotifyApi</span><span class="s2">.</span><span class="s1">authorizationCodeUri</span><span class="s2">()</span>
+                <span class="s2">.</span><span class="s1">scope</span><span class="s2">(</span><span class="s3">&quot;playlist-modify-private playlist-modify-public user-top-read&quot;</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">build</span><span class="s2">()</span>
+                <span class="s2">.</span><span class="s1">execute</span><span class="s2">()</span>
+                <span class="s2">.</span><span class="s1">toString</span><span class="s2">();</span>
+        <span class="s0">return new </span><span class="s1">RedirectView</span><span class="s2">(</span><span class="s1">authorizeURL</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+
+    <span class="s1">@GetMapping</span><span class="s2">(</span><span class="s3">&quot;/callback&quot;</span><span class="s2">)</span>
+    <span class="s0">public </span><span class="s1">RedirectView callback</span><span class="s2">(</span><span class="s1">@RequestParam</span><span class="s2">(</span><span class="s3">&quot;code&quot;</span><span class="s2">) </span><span class="s1">String code</span><span class="s2">) {</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">AuthorizationCodeCredentials credentials </span><span class="s2">= </span><span class="s1">spotifyApi</span><span class="s2">.</span><span class="s1">authorizationCode</span><span class="s2">(</span><span class="s1">code</span><span class="s2">).</span><span class="s1">build</span><span class="s2">().</span><span class="s1">execute</span><span class="s2">();</span>
+            <span class="s1">accessToken </span><span class="s2">= </span><span class="s1">credentials</span><span class="s2">.</span><span class="s1">getAccessToken</span><span class="s2">();</span>
+            <span class="s1">spotifyApi</span><span class="s2">.</span><span class="s1">setAccessToken</span><span class="s2">(</span><span class="s1">accessToken</span><span class="s2">);</span>
+            <span class="s0">return new </span><span class="s1">RedirectView</span><span class="s2">(</span><span class="s3">&quot;/top-songs&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+            <span class="s0">return new </span><span class="s1">RedirectView</span><span class="s2">(</span><span class="s3">&quot;/error&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public </span><span class="s1">String getAccessToken</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">accessToken</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">URI getRedirectUri</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">redirectUriObject</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

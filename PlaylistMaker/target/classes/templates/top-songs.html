@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Top Songs Playlist</title>
+    <link rel="stylesheet" href
+            ="/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Your Top Songs Playlist</h1>
+    <p>Click the button below to load your top songs and create a personalized playlist.</p>
+    <button id="loadButton" class="button">Load Top Songs</button>
+
+    <div id="playlistContainer" class="hidden">
+        <h2>Top Songs</h2>
+        <ol id="songList"></ol>
+        <p id="playlistLink"></p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loadButton').addEventListener('click', () => {
+        fetch('/top-songs-page')
+            .then(response => response.json())
+            .then(data => {
+                const playlistContainer = document.getElementById("playlistContainer");
+                const songList = document.getElementById("songList");
+                const playlistLink = document.getElementById("playlistLink");
+
+                playlistContainer.classList.remove("hidden");
+                songList.innerHTML = ''; // Clear any previous list
+
+                // Handle track names
+                if (data.trackNames && Array.isArray(data.trackNames)) {
+                    data.trackNames.forEach(song => {
+                        const li = document.createElement("li");
+                        li.textContent = song;
+                        songList.appendChild(li);
+                    });
+                }
+
+                // Show the playlist link if available
+                if (data.playlistUrl) {
+                    playlistLink.innerHTML = `View your playlist <a href="${data.playlistUrl}" target="_blank" class="button">here</a>.`;
+                }
+            })
+            .catch(error => {
+                alert("Error loading songs: " + error);
+            });
+    });
+</script>
+</body>
+</html>
