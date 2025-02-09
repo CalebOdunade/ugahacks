@@ -1,0 +1,53 @@
+body {
+    font-family: "Arsenal SC", serif; 
+    background-image: linear-gradient(to right, rgb(192, 235, 247), rgb(239, 181, 223));
+    color: white;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 50px auto;
+    text-align: center;
+    padding: 20px;
+    background-image: linear-gradient(to right, rgb(190, 232, 244), rgb(239, 181, 223));
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    color: white;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  ul li {
+    font-size: 1.1rem;
+    margin: 10px 0;
+  }
+  
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-image: linear-gradient(to right, rgb(169, 215, 228), rgb(239, 181, 223));
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-image: linear-gradient(to right, rgb(169, 215, 228), rgb(239, 181, 223));
+}
+  
